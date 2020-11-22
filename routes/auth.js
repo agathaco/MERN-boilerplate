@@ -1,12 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const { registerValidation, loginValidation } = require('./validation');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const User = require('../models/User');
+const { registerValidation, loginValidation } = require('./validation');
+const verifyToken = require('../middleware/verifyToken')
 
+// @route    GET api/auth
+// @desc     Get signed in user route
+// @access   Private
+router.get('/', verifyToken, async (req, res) => {
+  try {
+    console.log('get user id', req.user.id)
+    const user = await User.findById(req.user.id).select('-password'); // excludes password from object so we don't send it back to the frontend
+    console.log('user', user)
+    res.send(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
-// @route    POST api/auth
+// @route    POST api/auth/register
 // @desc     Register route
 // @access   Public
 router.post('/register',  async (req, res) => {
@@ -30,17 +45,18 @@ router.post('/register',  async (req, res) => {
     email,
     password: hashedPassword
   });
-
+  await user.save();
   try {
-    const newUser = await user.save()
-    res.status(201).send({user: newUser._id})
+    const token = getToken(user)
+    res.header('x-auth-token', token)
+    res.status(201).send({token})
   } catch (err) {
     console.error(err.message);
     res.status(400).send(err)
   }
 });
 
-// @route    POST api/auth
+// @route    POST api/auth/login
 // @desc     Login route
 // @access   Public
 router.post('/login', async (req, res) => {
@@ -60,14 +76,18 @@ router.post('/login', async (req, res) => {
   if (!isPasswordValid) return res.status(400).send('Invalid password')
 
   // get token
+  const token = getToken(user)
+  res.header('x-auth-token', token).send({token})
+
+});
+
+const getToken = (user) => {
   const payload = {
     user: {
       id: user.id
     }
   };
-  const token = jwt.sign(payload, process.env.TOKEN_SECRET)
-  res.header('auth_token', token).send(token)
-
-});
+  return jwt.sign(payload, process.env.TOKEN_SECRET)
+}
 
 module.exports = router;
