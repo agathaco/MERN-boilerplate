@@ -16,7 +16,7 @@ app.use(express.json())
 // app.use(bodyparser.json())
 
 // set up routes
-app.use('/api/posts', require('./routes/posts'));
+app.use('/api/profile', require('./routes/profile'));
 app.use('/api/auth', require('./routes/auth'));
 
 // listen to our server

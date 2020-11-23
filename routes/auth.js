@@ -3,6 +3,8 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Profile = require('../models/Profile');
+
 const { registerValidation, loginValidation } = require('./validation');
 const verifyToken = require('../middleware/verifyToken')
 
@@ -11,9 +13,7 @@ const verifyToken = require('../middleware/verifyToken')
 // @access   Private
 router.get('/', verifyToken, async (req, res) => {
   try {
-    console.log('get user id', req.user.id)
     const user = await User.findById(req.user.id).select('-password'); // excludes password from object so we don't send it back to the frontend
-    console.log('user', user)
     res.send(user);
   } catch (err) {
     console.error(err.message);
@@ -45,7 +45,14 @@ router.post('/register',  async (req, res) => {
     email,
     password: hashedPassword
   });
-  await user.save();
+  const savedUser = await user.save();
+
+  // create profile
+  const profile = new Profile({
+    user: savedUser._id
+  });
+  await profile.save();
+
   try {
     const token = getToken(user)
     res.header('x-auth-token', token)
@@ -69,12 +76,22 @@ router.post('/login', async (req, res) => {
 
   // Check if user exists
   let user = await User.findOne({ email });
+  console.log('user', user)
   if (!user) return res.status(400).send('Invalid email')
 
   // Check password
   const isPasswordValid = await bcrypt.compare(password, user.password)
   if (!isPasswordValid) return res.status(400).send('Invalid password')
 
+  // check if profile exists, if not, create it
+  const profileExists = await Profile.findOne({ user: user._id });
+  if (!profileExists) {
+    const profile = new Profile({
+      user: savedUser._id
+    });
+    await profile.save();
+  }
+  
   // get token
   const token = getToken(user)
   res.header('x-auth-token', token).send({token})
