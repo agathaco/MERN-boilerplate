@@ -2,12 +2,13 @@ import React, { Fragment, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
-import Navbar from "./components/layout/Nav";
-import Landing from "./components/layout/Landing";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Navbar from "./components/layout/Nav";
+import Landing from "./components/layout/Landing";
 import Alert from "./components/layout/Alert";
 import Dashboard from "./components/layout/Dashboard";
+import NotFound from './components/layout/NotFound';
 import PrivateRoute from "./components/routing/PrivateRoute";
 
 import setAuthToken from './utils/setAuthToken';
@@ -41,6 +42,7 @@ const App = () => {
               <Route exact path="/register" component={Register} />
               <Route exact path="/" component={Landing} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <Route component={NotFound} />
             </Switch>
           </section>
         </Fragment>
