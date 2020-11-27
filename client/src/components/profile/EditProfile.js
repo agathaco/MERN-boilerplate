@@ -65,7 +65,6 @@ const EditProfile = ({
       <p className="lead">
         <i className="fas fa-user" /> Add some changes to your profile
       </p>
-      <small>* = required field</small>
       <form className="form" onSubmit={onSubmit}>
 
         <div className="form-group">
@@ -76,9 +75,6 @@ const EditProfile = ({
             value={location}
             onChange={e=>onChange(e)}
           />
-          <small className="form-text">
-            City & state suggested (eg. Boston, MA)
-          </small>
         </div>
         <div className="form-group">
           <textarea
@@ -87,10 +83,9 @@ const EditProfile = ({
             value={bio}
             onChange={e=>onChange(e)}
           />
-          <small className="form-text">Tell us a little about yourself</small>
         </div>
 
-        <div className="my-2">
+        <div className="social-links">
           <button
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
             type="button"
@@ -104,7 +99,6 @@ const EditProfile = ({
         {displaySocialInputs && (
           <Fragment>
             <div className="form-group social-input">
-              <i className="fab fa-twitter fa-2x" />
               <input
                 type="text"
                 placeholder="Twitter URL"
@@ -115,7 +109,6 @@ const EditProfile = ({
             </div>
 
             <div className="form-group social-input">
-              <i className="fab fa-facebook fa-2x" />
               <input
                 type="text"
                 placeholder="Facebook URL"
@@ -126,7 +119,6 @@ const EditProfile = ({
             </div>
 
             <div className="form-group social-input">
-              <i className="fab fa-youtube fa-2x" />
               <input
                 type="text"
                 placeholder="YouTube URL"
@@ -137,7 +129,6 @@ const EditProfile = ({
             </div>
 
             <div className="form-group social-input">
-              <i className="fab fa-linkedin fa-2x" />
               <input
                 type="text"
                 placeholder="Linkedin URL"
@@ -148,7 +139,6 @@ const EditProfile = ({
             </div>
 
             <div className="form-group social-input">
-              <i className="fab fa-instagram fa-2x" />
               <input
                 type="text"
                 placeholder="Instagram URL"

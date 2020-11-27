@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import ProfileTop from './ProfileTop';
-import ProfileAbout from './ProfileAbout';
 import { getProfileById, deleteAccount } from '../../actions/profile';
 
 const Profile = ({ getProfileById, deleteAccount, profile: { profile }, auth: { isAuthenticated, loading, user }, match, history }) => {
@@ -33,9 +32,8 @@ const Profile = ({ getProfileById, deleteAccount, profile: { profile }, auth: { 
               </button>
             </Fragment>
             )}
-            <div className="profile-grid my-1">
+            <div className="profile-grid">
               <ProfileTop profile={profile} />
-              <ProfileAbout profile={profile} />
             </div>
         </Fragment>
       )}

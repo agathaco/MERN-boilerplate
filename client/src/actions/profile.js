@@ -89,11 +89,10 @@ export const updateProfile = (
 
   } catch (error) {
     // to do: test errors
-    const errors = error.response.data.errors;
+    console.error(error)
 
-    if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
-    }
+
+    if (error.response.data) dispatch(setAlert(error.response.data, 'danger'))
 
     dispatch({
       type: PROFILE_ERROR,

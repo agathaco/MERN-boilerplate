@@ -1,7 +1,7 @@
 /* Global Styles */
 :root {
   --primary-color: #8f4eff;
-  --dark-color: #343a40;
+  --dark-color: #2E3645;
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
   --success-color: #28a745;
@@ -13,12 +13,26 @@
   padding: 0;
 }
 
+html, body {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
 body {
   font-family: 'Raleway', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fefefe;
   color: var(--dark-color);
+}
+
+body > div#root {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
 }
 
 a {
@@ -37,12 +51,13 @@ img {
 /* Utilities */
 .container {
   max-width: 1100px;
+  width: 100%;
   margin: auto;
-  overflow: hidden;
-  padding: 0 2rem;
-  margin-top: 6rem;
-  margin-bottom: 3rem;
-  height: calc(100vh - 9rem);
+  /* overflow: hidden; */
+  position: relative;
+  padding: 2rem;
+  margin-top: 4rem;
+  height: 100%;
 }
 
 /* Text Styles*/
@@ -61,7 +76,7 @@ img {
 .medium {
   font-size: 2rem;
   line-height: 1.2;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .lead {
@@ -94,15 +109,6 @@ img {
   outline: none;
 }
 
-.badge {
-  font-size: 0.8rem;
-  padding: 0.1rem;
-  text-align: center;
-  margin: 0.3rem;
-  background: var(--light-color);
-  color: #333;
-}
-
 .alert {
   padding: 0.8rem;
   margin: 1rem 0;
@@ -127,7 +133,6 @@ img {
 
 .btn-primary,
 .bg-primary,
-.badge-primary,
 .alert-primary {
   background: var(--primary-color);
   color: #fff;
@@ -135,7 +140,6 @@ img {
 
 .btn-light,
 .bg-light,
-.badge-light,
 .alert-light {
   background: var(--light-color);
   color: #333;
@@ -143,7 +147,6 @@ img {
 
 .btn-dark,
 .bg-dark,
-.badge-dark,
 .alert-dark {
   background: var(--dark-color);
   color: #fff;
@@ -151,7 +154,6 @@ img {
 
 .btn-danger,
 .bg-danger,
-.badge-danger,
 .alert-danger {
   background: var(--danger-color);
   color: #fff;
@@ -159,7 +161,6 @@ img {
 
 .btn-success,
 .bg-success,
-.badge-success,
 .alert-success {
   background: var(--success-color);
   color: #fff;
@@ -167,7 +168,6 @@ img {
 
 .btn-white,
 .bg-white,
-.badge-white,
 .alert-white {
   background: #fff;
   color: #333;
@@ -178,13 +178,8 @@ img {
   opacity: 0.8;
 }
 
-.bg-light,
-.badge-light {
+.bg-light {
   border: #ccc solid 1px;
-}
-
-.round-img {
-  border-radius: 50%;
 }
 
 .line {
@@ -222,6 +217,9 @@ button {
   font: inherit;
 }
 
+.form .social-links {
+  margin: 2rem 0;
+}
 .form .social-input {
   display: flex;
 }
@@ -247,27 +245,19 @@ button {
   color: #0077b5;
 }
 
-.table th,
-.table td {
-  padding: 1rem;
-  text-align: left;
-}
-
-.table th {
-  background: var(--light-color);
-}
-
 /* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.7rem 2rem;
+  padding: 0.75rem 2rem;
+  line-height: 2.5rem;
+  height: 4rem;
   position: fixed;
   z-index: 1;
   width: 100%;
   top: 0;
-  opacity: 0.9;
+  background-color: var(--dark-color);
 }
 
 .navbar ul {
@@ -282,10 +272,6 @@ button {
 
 .navbar a:hover {
   color: var(--primary-color);
-}
-
-.navbar .welcome span {
-  margin-right: 0.6rem;
 }
 
 /* Landing Page */
@@ -308,10 +294,8 @@ button {
 
 /* Profiles Page */
 .profile {
-  display: grid;
-  grid-template-columns: 2fr 4fr 2fr;
+  display: flex;
   align-items: center;
-  grid-gap: 2rem;
   padding: 1rem;
   line-height: 1.8;
   margin-bottom: 1rem;
@@ -319,26 +303,29 @@ button {
 
 /* Profile Page */
 .profile-grid {
-  display: grid;
-  grid-template-areas:
-    'top top'
-    'about about'
-    'exp edu'
-    'github github';
-  grid-gap: 1rem;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-top: 1rem;
 }
 
 .profile-top {
-  grid-area: top;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.profile-top img {
-  width: 250px;
+  & img {
+    width: 200px;
+    height: 200px;
+    margin: 0.5rem;
+    border-radius: 50%;
+  }
+  & .profile-details {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  & .profile-contact {
+    margin-bottom: 2rem;
+  }
 }
 
 .profile-top .icons a {
