@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-// import ProfileTop from './ProfileTop';
-// import ProfileAbout from './ProfileAbout';
-import { getProfileById } from '../../actions/profile';
+import ProfileTop from './ProfileTop';
+import ProfileAbout from './ProfileAbout';
+import { getProfileById, deleteAccount } from '../../actions/profile';
 
-const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
+const Profile = ({ getProfileById, deleteAccount, profile: { profile }, auth: { isAuthenticated, loading, user }, match, history }) => {
   useEffect(() => {
     getProfileById(match.params.id);
   }, [getProfileById, match.params.id]);
@@ -18,16 +18,25 @@ const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
         <Spinner />
       ) : (
         <Fragment>
-          <Link to="/profiles" className="btn btn-light">
-            Back To Profiles
+          <Link to="/dashboard" className="btn btn-light">
+            Back To Dashboard
           </Link>
-          {auth.isAuthenticated &&
-            auth.loading === false &&
-            auth.user._id === profile.user._id && (
+          {isAuthenticated &&
+            loading === false &&
+            user._id === profile.user._id && (
+              <Fragment>
               <Link to="/edit-profile" className="btn btn-dark">
                 Edit Profile
               </Link>
+              <button className="btn btn-danger" onClick={() => deleteAccount(history)}>
+                <i className="fas fa-user-minus" /> Delete My Account
+              </button>
+            </Fragment>
             )}
+            <div className="profile-grid my-1">
+              <ProfileTop profile={profile} />
+              <ProfileAbout profile={profile} />
+            </div>
         </Fragment>
       )}
     </Fragment>
@@ -36,6 +45,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth, match }) => {
 
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -45,4 +55,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getProfileById })(Profile);
+export default connect(mapStateToProps, { getProfileById, deleteAccount })(withRouter(Profile));

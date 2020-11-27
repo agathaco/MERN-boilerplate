@@ -12,10 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "gravatar": "^1.8.1",
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.13",
+    "normalize": "^0.3.1",
     "react-spinners": "^0.9.0",
     "uuidv4": "^6.2.5"
   },

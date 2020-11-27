@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const gravatar = require('gravatar');
+const normalize = require('normalize-url');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 
@@ -40,9 +42,19 @@ router.post('/register',  async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
+  const avatar = normalize(
+    gravatar.url(email, {
+      s: '200',
+      r: 'pg',
+      d: 'mm'
+    }),
+    { forceHttps: true }
+  );
+
   const user = new User({
     name,
     email,
+    avatar,
     password: hashedPassword
   });
   const savedUser = await user.save();
@@ -76,7 +88,6 @@ router.post('/login', async (req, res) => {
 
   // Check if user exists
   let user = await User.findOne({ email });
-  console.log('user', user)
   if (!user) return res.status(400).send('Invalid email')
 
   // Check password

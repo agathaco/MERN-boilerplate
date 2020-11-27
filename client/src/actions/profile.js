@@ -5,7 +5,6 @@ import {
   GET_PROFILE,
   GET_PROFILES,
   PROFILE_ERROR,
-  UPDATE_PROFILE,
   CLEAR_PROFILE,
   ACCOUNT_DELETED
 } from './types';
@@ -19,10 +18,11 @@ export const getCurrentProfile = () => async dispatch => {
       type: GET_PROFILE,
       payload: res.data
     });
-  } catch (err) {
+  } catch (error) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      // to do: test errors
+      payload: { msg: error.response.statusText, status: error.response.status }
     });
   }
 };
@@ -38,10 +38,11 @@ export const getProfiles = () => async dispatch => {
       type: GET_PROFILES,
       payload: res.data
     });
-  } catch (err) {
+  } catch (error) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      // to do: test errors
+      payload: { msg: error.response.statusText, status: error.response.status }
     });
   }
 };
@@ -55,19 +56,20 @@ export const getProfileById = userId => async dispatch => {
       type: GET_PROFILE,
       payload: res.data
     });
-  } catch (err) {
+  } catch (error) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      // to do: test errors
+      payload: { msg: error.response.statusText, status: error.response.status }
     });
   }
 };
 
-// Create or update profile
-export const createProfile = (
+// Update profile
+export const updateProfile = (
   formData,
   history,
-  edit = false
+  userId
 ) => async dispatch => {
   try {
     const config = {
@@ -82,13 +84,12 @@ export const createProfile = (
       payload: res.data
     });
 
-    dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
+    dispatch(setAlert('Profile Updated', 'success'));
+    history.push(`/profile/${userId}`);
 
-    if (!edit) {
-      history.push('/dashboard');
-    }
-  } catch (err) {
-    const errors = err.response.data.errors;
+  } catch (error) {
+    // to do: test errors
+    const errors = error.response.data.errors;
 
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
@@ -96,7 +97,7 @@ export const createProfile = (
 
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: error.response.statusText, status: error.response.status }
     });
   }
 };
@@ -104,19 +105,21 @@ export const createProfile = (
 
 
 // Delete account & profile
-export const deleteAccount = () => async dispatch => {
+export const deleteAccount = (history) => async dispatch => {
   if (window.confirm('Are you sure? This can NOT be undone!')) {
     try {
       await axios.delete('api/profile');
+      history.push('/');
 
       dispatch({ type: CLEAR_PROFILE });
       dispatch({ type: ACCOUNT_DELETED });
 
       dispatch(setAlert('Your account has been permanently deleted'));
-    } catch (err) {
+    } catch (error) {
       dispatch({
         type: PROFILE_ERROR,
-        payload: { msg: err.response.statusText, status: err.response.status }
+        // to do: test errors
+        payload: { msg: error.response.statusText, status: error.response.status }
       });
     }
   }

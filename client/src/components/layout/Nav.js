@@ -4,13 +4,19 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 
-const Navbar = ({ auth, logout }) => {
+
+const Navbar = ({ auth: {user, isAuthenticated, loading}, logout, history }) => {
+  const profileId = user ? user._id : null;
+
 
   const authLinks = (
     <ul>
       <li>
         <Link to="/dashboard">Dashboard</Link>
       </li>
+      <li>
+      <Link to={`/profile/${profileId}`}>Profile</Link>
+    </li>
       <li>
         <a onClick={logout} href="#!">
           <span className="hide-sm">Logout</span>
@@ -30,6 +36,8 @@ const Navbar = ({ auth, logout }) => {
     </ul>
   );
 
+ 
+
   return (
     <nav className="navbar bg-dark">
       <h1>
@@ -37,8 +45,8 @@ const Navbar = ({ auth, logout }) => {
           Mern Boilerplate
         </Link>
       </h1>
-      {!auth.loading && (
-        <Fragment>{auth.isAuthenticated ? authLinks : guestLinks}</Fragment>
+      {!loading && (
+        <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
       )}
     </nav>
   );
@@ -50,7 +58,10 @@ Navbar.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  profile: state.profile,
+
 });
 
 export default connect(mapStateToProps, { logout })(Navbar);
+

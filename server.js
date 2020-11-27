@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+var cors = require('cors')
 const express = require('express')
 const app = express()
 
@@ -9,6 +10,8 @@ const db = mongoose.connection
 db.on('error', (error) => console.error(error)) // will run on error
 db.once('open', () => console.log('Connected to Database')) // will run only once
 
+
+app.use(cors());
 // set up server to accept json
 app.use(express.json())
 // OR
